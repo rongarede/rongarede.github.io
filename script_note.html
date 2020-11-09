@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>客户端脚本安全</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">不知通向哪的传送门</a>
+					</header>
+
+				
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<span class="date">11，9，2020</span>
+									<h3>客户端脚本安全</h3>
+									<p>在我的安全世界观一文中，提出了一个安全设计的原则，数据与代码分离。运行在客户端的脚本就是代码。本文中，分别对《白帽子讲web安全》中所提到的几个节点进行归纳梳理。 </p>
+								</header>
+								<h2>浏览器安全</h2>
+								<h3>我们平常可能会忽视一个事实：浏览器是互联网最大的入口。</h3>
+								<img src="images\tunshi.png" width="500" height="400">
+								<h2>一、同源策略</h2>
+								<p>同源策略是浏览器最基本也是最核心的安全功能。<br>
+									什么是同源策略？<br>
+									同源策略，<b>限制来自不同源的文本或者脚本，对当前的文本读取或设置某些属性。    </b>
+								</p>
+								<p>听起来很绕口，在理解同源策略之前，我们需要先理解源的概念。<br>
+								在我的理解下，源——可以比喻为一个村庄。在这个村庄内大家和和气气的生活在一起，村庄内的各户人家彼此信任，同源可以比喻为同一个村里边出来的。由于彼此信任，小A可以去小B家随意吃饭，可以去小C家帮忙种种地。但是外村的人，则不能被这个村信任，因此可能会发一些小信物，表示自己是可以信任的。</p>
+								<p><b>源，就是一个作用域。</b></p>
+								<p>如果没有同源策略，可能a.com 的一段脚本，在b.com未加载时，也可以随意涂改b.com的页面。由此可见同源策略的重要性。</p>
+								<img src="images\tongyuan_1.PNG" width="600" height="300"><br>(上图转载至https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy)
+								<p>协议、主机、端口三者的不同导致的源的不同。</p>
+								<p>PS: 1.若a.com 加载了b.com上的b.js,但是b.js是运行在a.com中的，因此对于a.com 来说，b.js的源是a.com 而非b.com<br> 2.浏览器加载的第三方插件也有自己各自的同源策略，常见插件如Flash\Java Applet\Silverlight\Google Gears\ Flash 的控制策略如crossdomain.xml</p>
+								<h2>二、浏览器沙箱</h2>
+								<p>沙箱即Sandbox，sandbox泛指资源隔离类模块。<br>
+									<b>sandbox设计的目的是为了讲不受信任的区域划分出去</b>，将受信任且需要保护的区域隔离出来。不受信任区域与受信任区域的信息交流通过几个特定的API接口。</p>
+								<p>浏览器多进程架构的设计也与此类似。将每一个页面视为一个进程。不同相对于单进程页面，在发生崩溃时，多进程页面只会崩溃掉当前的tab页，对其他的页面没有影响。</p>
+							</section>
+							<h2>跨站脚本攻击(XSS)</h2>
+							<p>画笔也是匕首</p>
+							<img src="images\xss_7.png" width="500" height="400">
+							<p>跨站脚本攻击(Cross Site Script)归根于HTML注入，但是由于其破坏力大、产生场景复杂、难以一次解决，因此其名气要大于HTML注入。<br>
+								什么是XSS注入呢？<br>
+								我们先来看一组图
+							</p>
+							<img src="images\xss_2.PNG" width="400" height="300"><br>
+							<img src="images\xss_3.PNG" width="400" height="200">
+							<p>我们在这里可以看到，在输入框中输入脚本代码，浏览器竟然可以执行，真神奇。<br>
+							虽然浏览器脚本设计之初，是为了使浏览器页面由静态转向动态。并且，脚本代码负责的是浏览器视图层，但是这并不意味着网页中脚本的注入与篡改就不重要。<br>
+							恰恰相反，正由于视图主体上面向于用户，而用户正是这个体系中最薄弱的一环。<br>大家想想，在一次诈骗中，是大公司的负责安全的工作人员容易受骗还是平平无奇小老百姓容易受骗？<br>其次，我们有时候会通过脚本来传递一些重要的敏感信息，这意味着我们的脚本对我们的敏感信息有一定的访问权限，比如cookie、token，拿到这些玩具之后，我就可以拿着这个钥匙去各位的家里逛逛，看看各位去了哪玩，去玩了什么，甚至我可以以各位的身份来和各位的朋友开玩笑。
+							<b>安全本身就是一个信任游戏，而脚本代码处于受信任的一方。</b>
+							聊了这么多，想必各位已经对XSS这个概念有所了解了。<br>那接下来我就来介绍一下XSS的类型。<br>
+							XSS根据效果的不同，可以分成如下几类</p>
+							<h3>一、反射型XSS</h3>
+							<img src="images\xss_4.jpg" width="900" height="500">
+							<p>在发出请求时，XSS代码藏在url中，然后提交到服务端，服务端解析后响应，XSS代码随着响应内容传回浏览器，最后浏览器解析执行代码，这就称为反射型XSS.
+							</p>
+							<h3>二、存储型XSS</h3>
+							<img src="images\xss_5.jpg" width="700" height="500">
+							<p>存储型XSS与反射型XSS的差别在于，存储型XSS所提交的代码会存储在服务器端。当受害者访问一个有存储型XSS的页面时，就会有恶意脚本悄悄的运行。</p>
+							<h3>三、DOM型XSS</h3>
+							<p>DOM的XSS，仅仅涉及到浏览器。例如，根据用户的输入来动态构造一个DOM节点，</p>
+							<h2>跨站点请求伪造(CSRF)</h2>
+							<p>魔术师</p>
+							<img src="images\csrf.jpg" width="500" height="400">
+							<p>浏览器Cookie有两种。其一是Session Cookie，其二是Third-party Cookie. Session Cookie 存在的时间仅仅是在浏览器页面未关闭之前，而Third-party Cookie 则是一直存在与用户本地。当用户发起请求时，浏览器会将Session Cookie 带上。而这就给了攻击者机会。<br>
+								为什么这么说呢？Cookie 代表的是用户的当前的身份令牌，服务器收到了一个请求后，并不是立马给请求执行且返回。服务器要做的第一步一定是验证用户的身份。<br>
+								而用什么验证用户的身份呢？<br>
+								Cookie。<br>
+							由于浏览器的特性是每次请求发起时就会顺便带上Session Cookie，所以说，只要用户点击了某个带有恶意指令的超链接，那么就有可能在未经用户允许之下进行某些特定的操作。</p>
+							<p>前边不是说了有两种cookie吗？ 而第二种cookie就是用于抵御攻击的。<br>
+								大部分浏览器不会允许非同源的网页发送Third-party Cookie，而这恰好可以抵御一部分的CSRF的攻击。但是，还不够。<br>
+								<b>CSRF的攻击，基于攻击者能够猜测出请求字段。</b>攻击者引诱被害者访问页面，用户自然不会说自己在使用什么软件，也不可能告诉攻击者要修改某项的请求url是怎样的。所有所有的一切都需要攻击者猜测。<br>
+								让攻击者猜测不出来请求url,那攻击就无从下手。<br>
+								怎样让服务器知道某操作的url代表了什么，而要让用户不知道，毕竟用户知道了攻击者就一定知道了。<br>
+							最简单的方法就是加密。给请求字符加密，比如说把id加密，只有服务器和用户拥有密钥。但是这样对后期的数据分析及其的不友好，对于用户也及其不友好，且如果每次的请求都不一样的话，会导致重定向带来困难，会极大的降低用户的体验。
+							<br>那这个时候token出现了。
+							<br>
+							token是一组由服务器分配的钥匙，它添加到url的后边，强大的加密算法可以保证攻击者无法<b>靠猜测</b>来得出。
+							<br>那这个问题变迎刃而解。</p>
+							<p>其次CSRF攻击实际上是由于用户与浏览器缺少交互而导致的。<br>
+							只要有一种可以让用户与浏览器强制交互的手段变可以解决这个问题。<b>——验证码</b>验证码是一种简洁的用户与界面强制交互的手段。这也是最简单的抵御CSRF的方法。<br>
+						但是，这种方法通常不用。你想想，假设你无论进行一个什么操作，操作底下都有一个验证码等着你填，那这个网页就显得极其的不友好。</p>
+						<p>CSRF攻击的攻击页面并非是用户所在的页面，而是攻击者所伪造的钓鱼页面。而http头中的Referer标签头可以显示出某个请求是由哪个页面而发出的。<br>
+							一般而言，进行某些操作必定同源。如果Referer来自一个非同源的请求，那么基本可以判定这是CSRF攻击。<br>
+						将非同源地址过滤掉即可抵御一部分的CSRF攻击。</p>
+						<h3>点击劫持(ClickJacking)</h3>
+						<p>变色龙</p>
+						<img src="images\bsl.png" width="500" height="400">
+						<p>我们都很相信自己所看到的一切。而点击劫持正是利用了这一点。</p>
+						<p>点击劫持的原理很简单，攻击者用一张画布蒙住了用户的眼睛，用户在画布上看到了用户所想要看到的东西，攻击者诱使用户移动鼠标去点击某个地方，同意某项指令。比如说某应用想请求管理员权限，攻击者用画布把请求管理员页面的界面蒙住，替换为一张用户感兴趣的页面。这个时候，用户不由自主的进入，而攻击者也得到了他所想要的权限。</p>
+						<p>这块画布就是iframe标签，我们将iframe的尺寸设置为同浏览器大小，且将iframe设置为透明，我们的攻击页面就设置完成了。然后再把底层页面设置为诱导页面，诱导用户操作。这就是ClickJacking的原理</p>
+						<h3>点击劫持的本质是视觉欺骗。</h3>
+						<p>ClickJacking 还有几个变种<br>
+							<b>Flash点击劫持</b><br>
+							Flash的交互性很强，我们可以利用Flash设计一个小游戏，来诱使用户不断的点击。<br>
+							<b>图片覆盖攻击(XSIO)</b><br>
+						XSIO是XSS注入的一种，而由于它的迷惑性，我将XSIO防御点击劫持中来介绍。<br>
+						XSIO是利用了img图片的style，如果应用没有限制style的position为absolute，那么这个图片就可以覆盖到网页上的任意一个位置。<br>
+						那这有什么用呢？<br>
+						我们在阅览网站的时候我们可以随便给别人换头像！！<br>
+					我们可以把自己朋友的头像换成猪头，然而他不浏览该页面他还不知道。因为我们修改的仅仅是此页面的数据。
+					<b>手机端的拖拽劫持</b><br>
+					手机端用户在浏览网页时其实看不到他们的url，而这也给与了攻击者便利，用户根本不知道他在浏览的网页的页面url是个什么东西。手机端的复制粘贴则可以通过拖拽来达成，<b>最最最最最为重要的一点是拖拽不受同源策略的影响</b>
+				我们可以在一次的拖拽中完成对数据的窃取。</p>
+
+
+							<ul class="actions special">
+									<li><a href="index.html" class="button large">启示录</a></li>
+								</ul>
+
+					</div>
+
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>我可是很有底线的!!</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
