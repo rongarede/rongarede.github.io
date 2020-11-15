@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Generic Page - Massively by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">传送门</a>
+					</header>
+
+
+				<!-- Main -->
+					<div id="main">
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<span class="date">November 15, 2020</span>
+									<h1>xss game writeup</h1>
+								</header>
+								<img src="images\xssg_1.PNG" width="600" height="200" alt=""><br>
+								<p>level 1 直接注入</p><br>
+								<img src="images\xssg_2.PNG" width="600" height="300" alt=""><br>
+								<p>level 2 闭合括号后注入 使用">闭合</p>
+								<img src="images\xssg_10.PNG" width="400" height="200" alt=""><br>
+								<img src="images\xssg_3.PNG" width="400" height="300" alt=""><br>
+								<p>level 3 使用onclick 事件绕过过滤</p><br>
+								<img src="images\xssg_11.PNG" width="400" height="200" alt=""><br>
+								<img src="images\xssg_12.PNG" width="400" height="300" alt=""><br>
+								<p>注意input里边的value是单引号所以我们用单引号闭合value然后注入onclick事件绕过而构成xss攻击</p><br>
+								<p>level 4 是双引号闭合 这里略过。</p><br>
+								<p>level 5 这里on做了过滤 我们就没法用onclick事件了我们可以使用伪协议。用a或者iframe 构造即可。 </p><br>
+								<img src="images\xssg_4.PNG" width="600" height="250" alt=""><br>
+								<img src="images\xssg_13.PNG" width="600" height="250" alt=""><br>
+								<p>level 6 将a、iframe、src 进行了过滤，但是没有进行大小写过滤，所以我们可以将href转为Href，这样就可以绕过进行注入</p><br>
+								<img src="images\xssg_5.PNG" width="800" height="250" alt=""><br>
+								<p>level 7 将script进行过滤，过滤为空，过滤函数一次只能过滤一个script因此我们可以使用双写注入</p><br>
+								<img src="images\xssg_6.PNG" width="600" height="250" alt=""><br>
+								<p>level 8 这里可以添加一个链接，我们可以知道我们在链接中也是可以注入的，但是这里的链接对script进行了过滤，过滤为scr_ipt我们可以替换script中的r，(使用tap制表符替换)来执行注入。</p><br>
+
+								<img src="images\xssg_7.PNG" width="400" height="300" alt=""><br>
+								<p>level 9 一样是添加链接，不过它新加了一个验真http://的函数，如果没有包含http那么就会导致报错，我们可以通过在执行之使用//进行注释。如***//http://</p><br>
+								<p>level 10 中我们可以通过隐藏的搜索框来执行事件注入。</p>
+
+								<img src="images\xssg_8.PNG" width="400" height="300" alt=""><br>
+								<img src="images\xssg_14.PNG" width="400" height="300" alt=""><br>
+								<p>level 11-13 通过burpsuite抓包修改cookie、referer、user-agent构成注入，当然是需要看具体页面是否有该参数的回显</p>
+								<img src="images\xssg_9.PNG" width="800" height="250" alt=""><br>
+								<p>level 14-？我看不懂了，干不动了。</p><br>
+								<p>总结一下<br>
+									一是直接注入<br>
+									二是闭合单引号或者双引号<br>
+									三是使用oninput、onmouseover事件等等进行绕过，这是在><被转义的情况之下，我们可以采用oninput这类不需要><的属性进行注入<br>
+									四是当我们on被过滤的时候我们可以采用a 超链接 或者是iframe 进行注入<br>
+									五是我们小写被过滤而大写没有过滤的时候我们可以将一些字符转为大写，那么我们就可以成功绕过。<br>
+									六当我们的某些字符被转义为空的时候，我们可以使用双写注入，因为转义为空只会转义一次。<br>
+									七我们可以通过tap字符表替换某个关键字符绕过过滤<br>
+									八当我们需要进行验证时我们可以先验证后注释<br>
+									就我们可以通过隐藏的输入框进行注入，隐藏的输入框反而可能会较为薄弱。
+									九http头中cookie、referer、user-agent、host也是很好的注入点。只要网站中有回显。<br>
+								</p>
+
+							</section>
+							<ul class="actions special">
+									<li><a href="index.html" class="button large">启示录</a></li>
+								</ul>
+
+					</div>
+
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>我可是很有底线的!!</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
